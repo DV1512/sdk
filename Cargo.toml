@@ -7,8 +7,8 @@ edition = "2021"
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
-api-forge = { git = "https://github.com/retrokiller543/api-forge.git" }
-tokio = { version = "1", features = ["full"] }
+api-forge = { git = "https://github.com/retrokiller543/api-forge.git", default-features = false }
+tokio = { version = "1", features = ["full"], optional = true }
 anyhow = "1.0.87"
 tracing = "0.1.40"
 thiserror = "1.0.63"
@@ -21,4 +21,5 @@ wasm-bindgen-futures = { version = "0.4.43", optional = true }
 
 [features]
 default = ["wasm"]
-wasm = ["wasm-bindgen", "js-sys", "web-sys", "wasm-bindgen-futures"]
+native = ["tokio", "api-forge/native"]
+wasm = ["wasm-bindgen", "js-sys", "web-sys", "wasm-bindgen-futures", 'api-forge/wasm']
