@@ -1,7 +1,9 @@
-use std::collections::HashMap;
+use std::{collections::HashMap, ops::{Deref, DerefMut}};
 
 use api_forge::Request;
 use serde::{Deserialize, Serialize};
+
+pub mod wasm;
 
 #[derive(Serialize, Deserialize, Debug, Clone, Request)]
 #[request(endpoint = "/posts", response_type = Posts)]
@@ -36,9 +38,25 @@ pub struct DeletePost {
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
+#[cfg_attr(feature = "wasm", wasm_bindgen::prelude::wasm_bindgen)]
 pub struct Posts(Vec<Post>);
 
+impl Deref for Posts {
+    type Target = Vec<Post>;
+
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
+}
+
+impl DerefMut for Posts {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.0
+    }
+}
+
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
+#[cfg_attr(feature = "wasm", wasm_bindgen::prelude::wasm_bindgen)]
 pub struct EmptyResponse(HashMap<String, String>);
 
 #[cfg(test)]

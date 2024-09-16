@@ -3,11 +3,23 @@ name = "sdk"
 version = "0.1.0"
 edition = "2021"
 
+[lib]
+crate-type = ["cdylib", "rlib"]
+
 [dependencies]
-api-forge = { git = "https://github.com/retrokiller543/api-forge.git" }
-tokio = { version = "1", features = ["full"] }
+api-forge = { git = "https://github.com/retrokiller543/api-forge.git", default-features = false }
+tokio = { version = "1", features = ["full"], optional = true }
 anyhow = "1.0.87"
 tracing = "0.1.40"
 thiserror = "1.0.63"
 reqwest = { version = "0.12.7", features = ["json", "multipart"] }
 serde = { version = "1.0", features = ["derive"] }
+wasm-bindgen ={ version = "0.2.93", features = ["serde-serialize", "serde_json"], optional = true}
+js-sys = { version = "0.3.70", optional = true }
+web-sys = { version = "0.3.70", features = ["Blob"], optional = true }
+wasm-bindgen-futures = { version = "0.4.43", optional = true }
+
+[features]
+default = ["wasm"]
+native = ["tokio", "api-forge/native"]
+wasm = ["wasm-bindgen", "js-sys", "web-sys", "wasm-bindgen-futures", 'api-forge/wasm']
