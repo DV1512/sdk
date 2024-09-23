@@ -26,7 +26,7 @@ checksum = "86fdf8605db99b54d3cd748a44c6d04df638eb5dafb219b135d0149bd0db01f6"
 [[package]]
 name = "api-forge"
 version = "0.0.3"
-source = "git+https://github.com/retrokiller543/api-forge.git#df6ce52fd8e15f7edc83afe8f9eea0796299c308"
+source = "git+https://github.com/retrokiller543/api-forge.git#4162ae2ea1510ae0cae64dc23908dc7eb8b190f3"
 dependencies = [
  "anyhow",
  "api-forge-macro",
@@ -42,7 +42,7 @@ dependencies = [
 [[package]]
 name = "api-forge-macro"
 version = "0.0.3"
-source = "git+https://github.com/retrokiller543/api-forge.git#df6ce52fd8e15f7edc83afe8f9eea0796299c308"
+source = "git+https://github.com/retrokiller543/api-forge.git#4162ae2ea1510ae0cae64dc23908dc7eb8b190f3"
 dependencies = [
  "darling",
  "proc-macro2",
