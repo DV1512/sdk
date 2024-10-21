@@ -9,7 +9,7 @@ crate-type = ["cdylib", "rlib"]
 [dependencies]
 api-forge = { git = "https://github.com/retrokiller543/api-forge.git", default-features = false }
 tokio = { version = "1", features = ["full"], optional = true }
-anyhow = "1.0.87"
+anyhow = "1.0.90"
 tracing = "0.1.40"
 thiserror = "1.0.64"
 reqwest = { version = "0.12.7", features = ["json", "multipart"] }
