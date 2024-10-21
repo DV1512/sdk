@@ -12,7 +12,7 @@ tokio = { version = "1", features = ["full"], optional = true }
 anyhow = "1.0.87"
 tracing = "0.1.40"
 thiserror = "1.0.64"
-reqwest = { version = "0.12.7", features = ["json", "multipart"] }
+reqwest = { version = "0.12.8", features = ["json", "multipart"] }
 serde = { version = "1.0", features = ["derive"] }
 wasm-bindgen ={ version = "0.2.93", features = ["serde-serialize", "serde_json"], optional = true}
 js-sys = { version = "0.3.70", optional = true }
