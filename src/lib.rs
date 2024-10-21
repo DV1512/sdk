@@ -1,9 +1,19 @@
-use std::{collections::HashMap, ops::{Deref, DerefMut}};
+use std::{
+    collections::HashMap,
+    ops::{Deref, DerefMut},
+};
 
 use api_forge::Request;
+use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 
 pub mod wasm;
+
+#[derive(Debug, Serialize, Deserialize, Clone, Default)]
+pub struct Id {
+    pub id: String,
+    pub tb: String,
+}
 
 #[derive(Serialize, Deserialize, Debug, Clone, Request)]
 #[request(endpoint = "/api/v1/oauth/token", transmission = FormData, response_type = TokenResponse, method = POST)]
@@ -19,6 +29,37 @@ pub struct TokenResponse {
     pub refresh_token: String,
     pub token_type: String,
     pub expires_in: usize,
+}
+
+// make the fucking get user by request or else
+#[derive(Serialize, Deserialize, Debug, Clone, Request)]
+#[request(endpoint = "/api/v1/user", response_type = User)]
+pub struct GetUser {
+    pub username: Option<String>,
+    pub email: Option<String>,
+    pub token: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+pub struct User {
+    pub id: Id,
+    pub email: String,
+    pub url_safe_username: String,
+    pub username: String,
+    pub first_name: String,
+    pub last_name: String,
+    pub created_at: DateTime<Utc>,
+    pub last_login: Option<DateTime<Utc>>,
+    pub picture: Option<String>,
+    pub role: Role,
+}
+
+#[derive(Debug, Serialize, Deserialize, PartialOrd, Eq, PartialEq, Clone, Default)]
+pub enum Role {
+    Owner,
+    Admin,
+    #[default]
+    User,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, Request)]
@@ -81,6 +122,28 @@ mod tests {
     use api_forge::ApiRequest;
 
     #[tokio::test]
+    async fn get_user() {
+        // Initialize the request.
+        let request = GetUser {
+            username: None,
+            email: Some("emil.schutt@gmail.com".to_string()),
+            token: None,
+        };
+
+        // Send the request and await the response.
+        let result = request
+            .send_and_parse("http://localhost:9999", None, None)
+            .await;
+
+        match result {
+            Ok(response) => {
+                println!("Successfully fetched user: {:?}", response)
+            }
+            Err(e) => eprintln!("Error occurred: {:?}", e),
+        }
+    }
+
+    #[tokio::test]
     async fn login() {
         // Initialize the request.
         let request = Login {
@@ -90,12 +153,14 @@ mod tests {
         };
 
         // Send the request and await the response.
-        let result = request.send_and_parse("http://localhost:9999", None, None).await;
+        let result = request
+            .send_and_parse("http://localhost:9999", None, None)
+            .await;
 
         match result {
             Ok(token_response) => {
                 println!("Successfully logged in: {:?}", token_response)
-            },
+            }
             Err(e) => eprintln!("Error occurred: {:?}", e),
         }
     }

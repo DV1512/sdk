@@ -18,8 +18,9 @@ wasm-bindgen ={ version = "0.2.93", features = ["serde-serialize", "serde_json"]
 js-sys = { version = "0.3.70", optional = true }
 web-sys = { version = "0.3.70", features = ["Blob"], optional = true }
 wasm-bindgen-futures = { version = "0.4.43", optional = true }
+chrono = { version = "0.4.38", features = ["serde"] }
 
 [features]
-default = ["wasm"]
+default = ["native"]
 native = ["tokio", "api-forge/native"]
 wasm = ["wasm-bindgen", "js-sys", "web-sys", "wasm-bindgen-futures", 'api-forge/wasm']

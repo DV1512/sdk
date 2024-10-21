@@ -1,16 +1,60 @@
 #![cfg(feature = "wasm")]
 
+mod get_users;
 mod login;
 
 use api_forge::ApiRequest;
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
+#[derive(Clone)]
+pub struct Id {
+    id: String,
+    tb: String,
+}
+
+#[wasm_bindgen]
+impl Id {
+    #[wasm_bindgen(constructor)]
+    pub fn new(id: String, tb: String) -> Id {
+        Id { id, tb }
+    }
+
+    #[wasm_bindgen(getter)]
+    pub fn id(&self) -> String {
+        self.id.clone()
+    }
+
+    #[wasm_bindgen(getter)]
+    pub fn tb(&self) -> String {
+        self.tb.clone()
+    }
+}
+
+impl From<&mut super::Id> for Id {
+    fn from(id: &mut super::Id) -> Self {
+        Self {
+            id: id.id.clone(),
+            tb: id.tb.clone(),
+        }
+    }
+}
+
+impl From<super::Id> for Id {
+    fn from(id: super::Id) -> Self {
+        Self {
+            id: id.id,
+            tb: id.tb,
+        }
+    }
+}
+
+#[wasm_bindgen]
 pub struct Post {
-  user_id: i32,
-  id: i32,
-  title: String,
-  body: String,
+    user_id: i32,
+    id: i32,
+    title: String,
+    body: String,
 }
 
 #[wasm_bindgen]
@@ -80,9 +124,12 @@ impl From<&mut super::Post> for Post {
 
 #[wasm_bindgen(js_name = getPosts)]
 pub async fn get_posts() -> Result<Vec<Post>, String> {
-  let mut posts = super::GetPosts.send_and_parse("https://jsonplaceholder.typicode.com", None, None).await.map_err(|err| format!("{:?}", err))?;
+    let mut posts = super::GetPosts
+        .send_and_parse("https://jsonplaceholder.typicode.com", None, None)
+        .await
+        .map_err(|err| format!("{:?}", err))?;
 
-  let posts: Vec<Post> = posts.iter_mut().map(|post| post.into()).collect();
+    let posts: Vec<Post> = posts.iter_mut().map(|post| post.into()).collect();
 
-  Ok(posts)
+    Ok(posts)
 }

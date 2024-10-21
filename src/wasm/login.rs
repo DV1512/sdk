@@ -1,6 +1,6 @@
+use crate::Login;
 use api_forge::ApiRequest;
 use wasm_bindgen::prelude::*;
-use crate::Login;
 
 #[wasm_bindgen]
 pub struct TokenResponse {
@@ -13,7 +13,12 @@ pub struct TokenResponse {
 #[wasm_bindgen]
 impl TokenResponse {
     #[wasm_bindgen(constructor)]
-    pub fn new(access_token: String, refresh_token: String, token_type: String, expires_in: usize) -> Self {
+    pub fn new(
+        access_token: String,
+        refresh_token: String,
+        token_type: String,
+        expires_in: usize,
+    ) -> Self {
         Self {
             access_token,
             refresh_token,
@@ -73,7 +78,10 @@ pub async fn password_login(username: String, password: String) -> Result<TokenR
         password,
     };
 
-    let token = request.send_and_parse("http://localhost:9999", None, None).await.map_err(|err| format!("{:?}", err))?;
+    let token = request
+        .send_and_parse("http://localhost:9999", None, None)
+        .await
+        .map_err(|err| format!("{:?}", err))?;
 
     Ok(token.into())
 }
