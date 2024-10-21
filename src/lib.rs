@@ -6,6 +6,22 @@ use serde::{Deserialize, Serialize};
 pub mod wasm;
 
 #[derive(Serialize, Deserialize, Debug, Clone, Request)]
+#[request(endpoint = "/api/v1/oauth/token", transmission = FormData, response_type = TokenResponse, method = POST)]
+pub struct Login {
+    pub grant_type: String,
+    pub username: String,
+    pub password: String,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+pub struct TokenResponse {
+    pub access_token: String,
+    pub refresh_token: String,
+    pub token_type: String,
+    pub expires_in: usize,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, Request)]
 #[request(endpoint = "/posts", response_type = Posts)]
 pub struct GetPosts;
 
@@ -63,6 +79,26 @@ pub struct EmptyResponse(HashMap<String, String>);
 mod tests {
     use super::*;
     use api_forge::ApiRequest;
+
+    #[tokio::test]
+    async fn login() {
+        // Initialize the request.
+        let request = Login {
+            grant_type: "password".to_string(),
+            username: "emil.schutt@gmail.com".to_string(),
+            password: "test".to_string(),
+        };
+
+        // Send the request and await the response.
+        let result = request.send_and_parse("http://localhost:9999", None, None).await;
+
+        match result {
+            Ok(token_response) => {
+                println!("Successfully logged in: {:?}", token_response)
+            },
+            Err(e) => eprintln!("Error occurred: {:?}", e),
+        }
+    }
 
     #[tokio::test]
     async fn test() {

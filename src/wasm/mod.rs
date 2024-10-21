@@ -1,5 +1,7 @@
 #![cfg(feature = "wasm")]
 
+mod login;
+
 use api_forge::ApiRequest;
 use wasm_bindgen::prelude::*;
 
