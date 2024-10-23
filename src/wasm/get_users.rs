@@ -226,7 +226,7 @@ impl GetUserByFilter {
 }
 
 #[wasm_bindgen(js_name = getUser)]
-pub async fn get_user(filter: GetUserByFilter) -> Result<User, String> {
+pub async fn get_user(token: String, filter: GetUserByFilter) -> Result<User, String> {
     let request = crate::GetUser {
         username: filter.username,
         email: filter.email,
@@ -234,7 +234,7 @@ pub async fn get_user(filter: GetUserByFilter) -> Result<User, String> {
     };
 
     let user = request
-        .send_and_parse("http://localhost:9999", None, None)
+        .send_and_parse("http://localhost:9999", None, Some((token, None)))
         .await
         .map_err(|err| format!("{:?}", err))?;
 

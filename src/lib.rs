@@ -33,7 +33,7 @@ pub struct TokenResponse {
 
 // make the fucking get user by request or else
 #[derive(Serialize, Deserialize, Debug, Clone, Request)]
-#[request(endpoint = "/api/v1/user", response_type = User)]
+#[request(endpoint = "/api/v1/user", response_type = User, authentication = Bearer)]
 pub struct GetUser {
     pub username: Option<String>,
     pub email: Option<String>,
@@ -132,7 +132,7 @@ mod tests {
 
         // Send the request and await the response.
         let result = request
-            .send_and_parse("http://localhost:9999", None, None)
+            .send_and_parse("http://localhost:9999", None, Some(("test".to_string(), None)))
             .await;
 
         match result {
